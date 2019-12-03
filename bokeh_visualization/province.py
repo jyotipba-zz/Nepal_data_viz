@@ -1,7 +1,7 @@
 from bokeh.io import curdoc
 from bokeh.models.widgets import Tabs,Select
 from bokeh.plotting import figure, show
-from bokeh.models import ColumnDataSource, Panel,HoverTool
+from bokeh.models import ColumnDataSource, Panel,HoverTool,Range
 from bokeh.transform import dodge
 from bokeh.layouts import column, row, WidgetBox
 
@@ -16,36 +16,31 @@ def province_plot(data):
 		data_province = data[data.Province==province_name]
 		new_source = ColumnDataSource(data=data_province)
 		districts =  data_province['District'].tolist()
+		y_max = max(data_province[['Percentage of active female accounts','Percentage of active male accounts' ]].max().values)
 
-		return  new_source, districts
+
+		return  new_source, districts, y_max+5
 		
 	
-	def plot_active_accounts(source, districts):
+	def plot_active_accounts(source, districts, y_max):
 
-		p = figure(x_range=districts, y_range=(0, 100), 
+		# https://stackoverflow.com/questions/50937462/add-hover-to-plot-with-multiple-vertical-bars-bokeh 
+		p = figure(x_range=districts, y_range=(0, y_max), 
 		   plot_height=250, title="Percentage of active accounts",
-		   toolbar_location=None,tooltips=[("Population", "@FCHV Distict wise")])
+		   tools='pan, box_zoom, wheel_zoom, reset,hover', tooltips='$name:@$name')
 		
 		p.vbar(x=dodge('District', -0.25, range=p.x_range), top='Percentage of active male accounts', width=0.2, source=source,
-		legend_label="Male", color="#718dbf")
+		legend_label="Male", color="#718dbf", name = 'Total number of active male accounts')
 
 		p.vbar(x=dodge('District',  0.0,  range=p.x_range), top='Percentage of active female accounts', width=0.2, source=source,
-		legend_label="Female",color="#e84d60")
+		legend_label="Female",color="#e84d60", name = 'Total number of active female accounts')
 
-		# add hover tool
-		 
-		hover = HoverTool(tooltips=[('# of active male accounts', '@name'), 
-					('# of active female accounts', '@name')],
-					mode='vline'
-					)
-		
-		
 		#p.x_range.range_padding = 0.1
 		p.xgrid.grid_line_color = None
 		p.legend.location = "top_left"
 		p.xaxis.major_label_orientation = 1.2
 		p.legend.orientation = "horizontal"
-		p.add_tools(hover)
+		
 		return p 
 		
 	def plot_literacy_rate(source, districts):
@@ -71,10 +66,12 @@ def province_plot(data):
 	def update_data_source(attr, old, new):
 		
 		selected_province = province_select.value
-		new_source, districts  = make_data_source(selected_province)
+		new_source, districts, y_max  = make_data_source(selected_province)
 		source.data.update(new_source.data)
 		#p.x_range = districts
-		p.x_range.factors=(districts)
+		p.x_range.factors = (districts)
+		p.y_range.end = y_max
+
 		lit_rate.x_range.factors=(districts)
 		
 		
@@ -90,8 +87,8 @@ def province_plot(data):
 	# initial values from select widget 
 	first_province = province_select.value
 	
-	source, districts = make_data_source(first_province)
-	p = plot_active_accounts(source, districts)
+	source, districts, y_max = make_data_source(first_province)
+	p = plot_active_accounts(source, districts, y_max)
 	lit_rate = plot_literacy_rate(source, districts)
 	layout = column(controls,p,lit_rate)
 	tab = Panel(child=layout, title="Provinces")
