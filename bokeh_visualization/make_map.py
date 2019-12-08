@@ -14,14 +14,14 @@ def choloropath_map(data):
 	gdf = gpd.read_file(nepal_geojson)
 
 	# rename column in data to match with field in geojson
-	data.rename(columns={'District':'DIST_EN'}, inplace=True)
+	new_data = data.rename(columns={'District':'DIST_EN'})
 
 	# replacing the district name in dataframe such that it matches with the name in geojson data
-	data = data.replace('Makwanpur', 'Makawanpur')
-	data = data.replace('Kavrepalanchok', 'Kabhrepalanchok')
-	data = data.replace('Dhanusa', 'Dhanusha')
+	new_data = new_data.replace('Makwanpur', 'Makawanpur')
+	new_data = new_data.replace('Kavrepalanchok', 'Kabhrepalanchok')
+	new_data = new_data.replace('Dhanusa', 'Dhanusha')
 
-	merged = gdf.merge(data, how='left', on='DIST_EN') # merge data and geojson
+	merged = gdf.merge(new_data, how='left', on='DIST_EN') # merge data and geojson
 
 	merged_json = json.loads(merged.to_json())  #Read data to json
 
@@ -32,7 +32,7 @@ def choloropath_map(data):
 	geosource = GeoJSONDataSource(geojson = json_data)
 	palette = brewer['OrRd'][8]
 	palette = palette[::-1]
-	color_mapper = LinearColorMapper(palette = palette, low = 0, high = 130)
+	color_mapper = LinearColorMapper(palette = palette, low = 0, high = 100)
 
 	#Create color bar
 	color_bar = ColorBar(color_mapper=color_mapper, label_standoff=8,width = 500, height = 20,
