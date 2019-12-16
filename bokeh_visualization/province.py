@@ -1,7 +1,7 @@
 from bokeh.io import curdoc
 from bokeh.models.widgets import Tabs,Select
 from bokeh.plotting import figure, show
-from bokeh.models import ColumnDataSource, Panel,HoverTool,Range
+from bokeh.models import ColumnDataSource, Panel,HoverTool,Range,Legend
 from bokeh.transform import dodge
 from bokeh.layouts import column, row, WidgetBox
 
@@ -18,7 +18,6 @@ def province_plot(data):
 		districts =  data_province['District'].tolist()
 		y_max = max(data_province[['Percentage of active female accounts','Percentage of active male accounts' ]].max().values)
 
-
 		return  new_source, districts, y_max+5
 		
 	
@@ -27,33 +26,39 @@ def province_plot(data):
 		# https://stackoverflow.com/questions/50937462/add-hover-to-plot-with-multiple-vertical-bars-bokeh 
 		p = figure(x_range=districts, y_range=(0, y_max), 
 		   plot_height=250, title="Percentage of active accounts",
-		   tools='pan, box_zoom, wheel_zoom, reset,hover', tooltips='$name:@$name')
+		   tools='save, box_zoom, wheel_zoom,reset', tooltips='$name:@$name')
 		
-		p.vbar(x=dodge('District', -0.25, range=p.x_range), top='Percentage of active male accounts', width=0.2, source=source,
-		legend_label="Male", color="#718dbf", name = 'Total number of active male accounts')
+		m=p.vbar(x=dodge('District', -0.25, range=p.x_range), top='Percentage of active male accounts', width=0.2, source=source,
+		 color="#718dbf", name = 'Total number of active male accounts')
 
-		p.vbar(x=dodge('District',  0.0,  range=p.x_range), top='Percentage of active female accounts', width=0.2, source=source,
-		legend_label="Female",color="#e84d60", name = 'Total number of active female accounts')
+		f=p.vbar(x=dodge('District',  0.0,  range=p.x_range), top='Percentage of active female accounts', width=0.2, source=source,
+		color="#e84d60", name = 'Total number of active female accounts')
 
 		#p.x_range.range_padding = 0.1
 		p.xgrid.grid_line_color = None
-		p.legend.location = "top_left"
+		#p.legend.location = "top_right"
 		p.xaxis.major_label_orientation = 1.2
-		p.legend.orientation = "horizontal"
+		#p.legend.orientation = "vertical"
+		#
+
+		legend = Legend(items=[('Male', [m]), ('Female',[f])], location=(0, 30))
+		legend.click_policy="hide"
+		p.add_layout(legend, 'right')
 		
-		return p 
+		return p
+		 
 		
 	def plot_literacy_rate(source, districts):
 
 		lit_rate = figure(x_range=districts, y_range=(0, 100), 
-		   plot_height=250, title="Literacy rate",
-		   toolbar_location=None)
+		   					plot_height=250, title="Literacy rate",
+		   					tools='save, box_zoom, wheel_zoom,reset')
 		
-		lit_rate.vbar(x=dodge('District', -0.25, range=lit_rate.x_range), top='Literacy_Rate_Male', width=0.2, source=source,
-		legend_label="Male", color="#718dbf")
+		m = lit_rate.vbar(x=dodge('District', -0.25, range=lit_rate.x_range), top='Literacy_Rate_Male', width=0.2, source=source,
+		 		color="#718dbf")
 
-		lit_rate.vbar(x=dodge('District',  0.0,  range=lit_rate.x_range), top='Literacy_Rate_Female', width=0.2, source=source,
-		legend_label="Female",color="#e84d60")
+		f = lit_rate.vbar(x=dodge('District',  0.0,  range=lit_rate.x_range), top='Literacy_Rate_Female', width=0.2, source=source,
+		   		color="#e84d60")
 
 		
 		#p.x_range.range_padding = 0.1
@@ -61,6 +66,10 @@ def province_plot(data):
 		lit_rate.legend.location = "top_left"
 		lit_rate.xaxis.major_label_orientation = 1.2
 		lit_rate.legend.orientation = "horizontal"
+
+		legend = Legend(items=[('Male', [m]), ('Female',[f])], location=(0, 30))
+		legend.click_policy="hide"
+		lit_rate.add_layout(legend, 'right')
 		return lit_rate 
 		
 	def update_data_source(attr, old, new):
