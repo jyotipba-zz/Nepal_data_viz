@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"  class="full-height">
+    <head>
+      <meta charset="utf-8">
+      <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+      <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+      <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+      <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+      <title> {{ title }}</title>
+    </head>
+    <body>
+      <nav class="navbar navbar-expand-md navbar-light bg-info">
+        <a href="#" class="navbar-brand">Nepal Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class = "collapse navbar-collapse" id="navbar-menu">
+            <div class="navbar-nav">
+                <a href="{{ url_for('home') }}" class="nav-item nav-link">Home</a>
+                <a href="{{ url_for('visual') }}" class="nav-item nav-link">Visualization</a>
+            </div>
+            <div class="navbar-nav ml-auto">
+                <a href="#" class="nav-item nav-link">About</a>
+            </div>
+        </div>
+      </nav>
+      <div class="container">
+        <!--Row with three equal columns-->
+        <div class="row">
+          {% block content %}{% endblock %}
+            
+        </div>
+      
+      
+    </body>
+</html>
