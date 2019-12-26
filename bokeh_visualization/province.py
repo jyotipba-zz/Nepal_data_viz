@@ -39,7 +39,7 @@ def province_plot(data):
 		#p.legend.location = "top_right"
 		p.xaxis.major_label_orientation = 1.2
 		#p.legend.orientation = "vertical"
-		#
+		
 
 		legend = Legend(items=[('Male', [m]), ('Female',[f])], location=(0, 30))
 		legend.click_policy="hide"
@@ -54,11 +54,13 @@ def province_plot(data):
 		   					plot_height=250, title="Literacy rate",
 		   					tools='save, box_zoom, wheel_zoom,reset')
 		
-		m = lit_rate.vbar(x=dodge('District', -0.25, range=lit_rate.x_range), top='Literacy_Rate_Male', width=0.2, source=source,
-		 		color="#718dbf")
+		m = lit_rate.vbar(x=dodge('District', -0.25, range=lit_rate.x_range), top='Literacy_Rate_Male',
+							 width=0.2, source=source,
+		 						color="#718dbf")
 
-		f = lit_rate.vbar(x=dodge('District',  0.0,  range=lit_rate.x_range), top='Literacy_Rate_Female', width=0.2, source=source,
-		   		color="#e84d60")
+		f = lit_rate.vbar(x=dodge('District',  0.0,  range=lit_rate.x_range), top='Literacy_Rate_Female',
+							 width=0.2, source=source,
+		   					color="#e84d60")
 
 		
 		#p.x_range.range_padding = 0.1
@@ -100,6 +102,6 @@ def province_plot(data):
 	p = plot_active_accounts(source, districts, y_max)
 	lit_rate = plot_literacy_rate(source, districts)
 	layout = column(controls,p,lit_rate)
-	tab = Panel(child=layout, title="Provinces")
+	tab = Panel(child=layout, title=" Select province")
 	
 	return  tab

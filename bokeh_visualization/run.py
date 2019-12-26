@@ -13,16 +13,16 @@ from bokeh.transform import dodge
 from bokeh.layouts import column, row, WidgetBox
 
 # import different ploting function as module
-
 from province import province_plot
 from summary import show_summary_stat 
+from make_map import choloropath_map
 
 # Read data 
-data = pd.read_csv('../data_analysis/main_data.csv')
+data = pd.read_csv('./data/main_data.csv')
 
 data.isnull().sum()
 
-data = data.dropna(axis=0,how='any' )
+data = data.dropna(axis=0,how='any')
 
  
 data = data.replace(regex=r',', value='')
@@ -34,8 +34,10 @@ for col in col_to_change:
 
 
 tabs_province = province_plot(data)
-tabs_summary = show_summary_stat(data)
-tabs = Tabs(tabs=[ tabs_province,tabs_summary])
+#tabs_summary = show_summary_stat(data)
+tabs_map = choloropath_map(data)
+tabs = Tabs(tabs=[ tabs_province,tabs_map ])
+
 # Put the tabs in the current document for display
 curdoc().add_root(tabs)
 

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %} 
+
+<div class="container" >
+    <img src={{ url_for('static', filename='photos/nepal.jpg')}} vertical-align="middle">
+    <div class="centered">
+        <p> Welcome come to Nepal Dashboard. In this page, we try to visualize some finanical data 
+            from Nepal. Click on visualization link and play
+             around with different visualizaton tools.
+        </p>
+    </div>
+</div>
+    
+{% endblock %}

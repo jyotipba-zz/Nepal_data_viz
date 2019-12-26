@@ -9,7 +9,7 @@ from bokeh.palettes import brewer
 def choloropath_map(data):
 
 	# Read geojson file containing Nepali districts 
-	nepal_geojson = '../myapp/static/nepal-districts-new.geojson'
+	nepal_geojson = './data/nepal-districts-new.geojson'
 
 	gdf = gpd.read_file(nepal_geojson)
 
@@ -52,6 +52,7 @@ def choloropath_map(data):
 	p.add_tools(HoverTool(tooltips = [ ('District','@DIST_EN'),
 							  ('Female literacy rate (%)', '@Literacy_Rate_Female'),
 							  ('Male literacy rate (%)', '@Literacy_Rate_Male'),
+							  
 							  
 							  ]))
 	
