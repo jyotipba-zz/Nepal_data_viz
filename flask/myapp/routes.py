@@ -13,7 +13,7 @@ def home():
 def visual():
 
 	script = server_document(url='http://localhost:5006/run')
-	print(script)
+	#print(script)
 	return render_template('visual.html', script=script)
 
 @app.route('/about')
